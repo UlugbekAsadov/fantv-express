@@ -1,6 +1,7 @@
 import { NextFunction, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request } from '../utils/interfaces/express.interface';
+import { ErrorMessages } from '../utils/enums/error-response.enum';
 
 export function protectedRoute(
   req: Request,
@@ -9,7 +10,8 @@ export function protectedRoute(
 ) {
   const bearerToken = req.header('Authorization');
 
-  if (!bearerToken) return res.status(401).json({ error: 'Access denied' });
+  if (!bearerToken)
+    return res.status(401).json({ error: ErrorMessages.ACCESS_DENIED });
 
   const [_, token] = bearerToken.split(' ');
 
@@ -21,6 +23,6 @@ export function protectedRoute(
     req.userId = decoded.userId;
     next();
   } catch (error) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: ErrorMessages.INVALID_TOKEN });
   }
 }

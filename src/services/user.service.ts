@@ -6,6 +6,7 @@ import {
   ILoginResponse,
 } from '../utils/interfaces/auth.interface';
 import jwt from 'jsonwebtoken';
+import { ErrorMessages } from '../utils/enums/error-response.enum';
 
 export class UserService {
   public async register({
@@ -24,9 +25,14 @@ export class UserService {
 
   public async login({ email, password }: ILogin): Promise<ILoginResponse> {
     const user = await User.findOne({ email });
-    if (!user) throw { status: 404, message: 'User not found' };
+    if (!user)
+      throw {
+        status: 404,
+        message: ErrorMessages.USER_NOT_FOUND,
+      };
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) throw { status: 401, message: 'Invalid password' };
+    if (!isMatch)
+      throw { status: 401, message: ErrorMessages.INVALID_PASSWORD };
 
     const jwt = this.generateJWTToken(user);
 
@@ -42,10 +48,10 @@ export class UserService {
 
     const user = await User.findById(userId);
 
-    if (!user) throw { status: 404, message: 'User not found' };
+    if (!user) throw { status: 404, message: ErrorMessages.USER_NOT_FOUND };
 
     if (password !== confirmPassword)
-      throw { status: 400, message: 'Passwords do not match' };
+      throw { status: 400, message: ErrorMessages.PASSWORD_DID_NOT_MATCHED };
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
