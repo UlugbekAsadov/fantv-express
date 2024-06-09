@@ -16,8 +16,8 @@ export const UserSchema: Schema<IUserSchema> = new Schema(
   {
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    email: { type: String, required: true },
-    phoneNumber: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    phoneNumber: { type: String, required: true, unique: true },
     fullName: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     followers: { type: Number, default: 0 },
