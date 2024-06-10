@@ -5,6 +5,7 @@ import { userRoutes } from './routes/auth.route';
 import { updateUsers } from './scripts/user.script';
 
 dotenv.config();
+
 const app = express();
 
 app.use(express.json());
@@ -26,4 +27,3 @@ app.listen(port, async () => {
     =================================================
   `);
 });
- 

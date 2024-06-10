@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { UserController } from '../controllers/user.controller';
-import { protectedRoute } from '../middlewares/protected-route.middleware';
+import { UserController } from '../controllers/auth.controller';
+import { protectedRoute } from '../middlewares/protectedRoute';
 import {
   validateChangePassword,
   validateLogin,
@@ -29,6 +29,22 @@ userRoutes.post(
   validateChangePassword(),
   validateRequest,
   userController.updatePassword,
+);
+
+userRoutes.post('/telegram-check-otp', userController.telegramCheckOtp);
+userRoutes.post(
+  '/telegram-set-password',
+  protectedRoute,
+  validateChangePassword(),
+  validateRequest,
+  userController.telegramSetPassword,
+);
+userRoutes.post(
+  '/telegram-check-password',
+  protectedRoute,
+  validateChangePassword()[0],
+  validateRequest,
+  userController.telegramCheckPassword,
 );
 
 export { userRoutes };
