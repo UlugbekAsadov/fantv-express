@@ -114,7 +114,7 @@ export class UserService {
     const telegramUser = await TelegramUsers.findOne({ deviceId });
 
     if (!telegramUser)
-      throw { status: 404, message: ErrorMessages.USER_NOT_FOUND };
+      throw { status: 404, message: ErrorMessages.OTP_NOT_FOUND };
 
     if (new Date(telegramUser.expireDate).getTime() < new Date().getTime())
       throw { status: 401, message: ErrorMessages.OTP_EXPIRED };
