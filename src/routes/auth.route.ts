@@ -24,11 +24,11 @@ userRoutes.post(
   userController.login,
 );
 userRoutes.post(
-  '/update-password',
+  '/change-password',
   protectedRoute,
   validateChangePassword(),
   validateRequest,
-  userController.updatePassword,
+  userController.changePassword,
 );
 
 userRoutes.post('/telegram-check-otp', userController.telegramCheckOtp);

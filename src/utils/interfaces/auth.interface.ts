@@ -1,32 +1,5 @@
 import { IUserSchema } from '../../models/user.model';
 
-export interface ILogin {
-  phoneNumber: string;
-  password: string;
-}
-
-export interface ILoginResponse {
-  access_token: string;
-  user: IUserSchema;
-}
-
-export interface IForgotPassword {
-  userId: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface ITelegramLoginRequest {
-  otp: string;
-  deviceId: string;
-}
-
-export interface ITelegramCreateUser {
-  userId: string;
-  password: string;
-  confirmPassword: string;
-}
-
 export interface IRegister {
   username?: string;
   password: string;
@@ -41,6 +14,33 @@ export interface IRegister {
 export interface IRegisterResponse {
   access_token: string;
   user: IUserSchema;
+}
+
+export interface ILogin {
+  phoneNumber: string;
+  password: string;
+}
+
+export interface ILoginResponse {
+  access_token: string;
+  user: IUserSchema;
+}
+
+export interface IChangePassword {
+  userId: string;
+  password: string;
+  confirmPassword: string;
+}
+
+export interface ITelegramLoginRequest {
+  otp: string;
+  deviceId: string;
+}
+
+export interface ITelegramCreateUser {
+  userId: string;
+  password: string;
+  confirmPassword: string;
 }
 
 export interface ITelegramUser {

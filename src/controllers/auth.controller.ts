@@ -12,7 +12,7 @@ export class UserController {
 
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
-    this.updatePassword = this.updatePassword.bind(this);
+    this.changePassword = this.changePassword.bind(this);
     this.telegramCheckOtp = this.telegramCheckOtp.bind(this);
     this.telegramSetPassword = this.telegramSetPassword.bind(this);
     this.telegramCheckPassword = this.telegramCheckPassword.bind(this);
@@ -31,7 +31,7 @@ export class UserController {
         email,
       });
 
-      res.status(201).json({ user });
+      res.status(201).json(user);
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
@@ -52,14 +52,14 @@ export class UserController {
     }
   }
 
-  public async updatePassword(req: Request, res: Response): Promise<void> {
+  public async changePassword(req: Request, res: Response): Promise<void> {
     try {
       const { confirmPassword, password } = req.body;
       const userId = req.userId;
 
       if (!userId) throw { status: 404, message: 'User not found' };
 
-      const user = await this.userService.forgotPassword({
+      const user = await this.userService.changePassword({
         userId,
         password,
         confirmPassword,

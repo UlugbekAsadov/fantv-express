@@ -1,7 +1,7 @@
 import { IUserSchema, User } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import {
-  IForgotPassword,
+  IChangePassword,
   ILogin,
   ILoginResponse,
   IRegister,
@@ -9,12 +9,12 @@ import {
   ITelegramCreateUser,
   ITelegramLoginRequest,
 } from '../utils/interfaces/auth.interface';
-import jwt from 'jsonwebtoken';
 import { ErrorMessages } from '../utils/enums/error-response.enum';
 import { TelegramUsers } from '../models/telegram-login.model';
 import { SuccessMessages } from '../utils/enums/success-response.enum';
 import { UniqueUsernameGenerator } from '../utils/classes/unique-username-generator';
 import { TelegramService } from './telegram.service';
+import { generateJWTToken } from '../utils/utils';
 
 export class UserService {
   private telegramService: TelegramService;
@@ -54,7 +54,7 @@ export class UserService {
     const user = new User(newUser);
     await user.save();
     return {
-      access_token: this.generateJWTToken(user),
+      access_token: generateJWTToken(user),
       user: user,
     };
   }
@@ -77,7 +77,7 @@ export class UserService {
       if (!isMatch)
         throw { status: 401, message: ErrorMessages.INVALID_PASSWORD };
 
-      const jwt = this.generateJWTToken(user);
+      const jwt = generateJWTToken(user);
 
       return { access_token: jwt, user: user };
     } catch (error) {
@@ -85,11 +85,11 @@ export class UserService {
     }
   }
 
-  public async forgotPassword({
+  public async changePassword({
     userId,
     password,
     confirmPassword,
-  }: IForgotPassword): Promise<ILoginResponse> {
+  }: IChangePassword): Promise<ILoginResponse> {
     const newPassword = await bcrypt.hash(password, 10);
 
     const user = await User.findById(userId);
@@ -105,24 +105,9 @@ export class UserService {
       { new: true },
     );
 
-    const jwt = this.generateJWTToken(user);
+    const jwt = generateJWTToken(user);
 
     return { access_token: jwt, user: updatedUser as IUserSchema };
-  }
-
-  public generateJWTToken(
-    user: IUserSchema extends Document ? IUserSchema : any,
-  ) {
-    const { _id: userId, phoneNumber } = user;
-    const jwtToken = jwt.sign(
-      { userId, phoneNumber },
-      process.env.JWT_SECRET as string,
-      {
-        expiresIn: '1d',
-      },
-    );
-
-    return jwtToken;
   }
 
   public async telegramCheckOtp({ otp, deviceId }: ITelegramLoginRequest) {
@@ -142,7 +127,7 @@ export class UserService {
     });
 
     if (user) {
-      const jwtToken = this.generateJWTToken(user);
+      const jwtToken = generateJWTToken(user);
       return {
         token: jwtToken,
         status: 409,
@@ -150,7 +135,7 @@ export class UserService {
       };
     }
 
-    const jwtToken = this.generateJWTToken(telegramUser);
+    const jwtToken = generateJWTToken(telegramUser);
 
     return {
       token: jwtToken,
