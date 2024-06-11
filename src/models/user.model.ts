@@ -4,24 +4,27 @@ import bcrypt from 'bcrypt';
 export interface IUserSchema {
   username: string;
   password: string;
-  email: string;
+  email?: string;
   phoneNumber: string;
   fullName: string;
-  isActive: boolean;
-  followers: number;
-  price: number;
+  isActive?: boolean;
+  followers?: number;
+  price?: number;
+  balance?: number;
 }
 
 export const UserSchema: Schema<IUserSchema> = new Schema(
   {
     username: { type: String, required: true, unique: true },
-    password: { type: String },
+    password: { type: String, required: true },
     email: { type: String },
     phoneNumber: { type: String, required: true, unique: true },
     fullName: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     followers: { type: Number, default: 0 },
     price: { type: Number, default: 0 },
+    balance: { type: Number, default: 0 },
+
   },
   {
     timestamps: true,

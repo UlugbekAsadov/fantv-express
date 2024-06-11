@@ -3,6 +3,7 @@ import { AuthService } from '../services/auth.service';
 import { IUserSchema } from '../models/user.model';
 import { Request } from '../utils/interfaces/express.interface';
 import { ErrorMessages } from '../utils/enums/error-response.enum';
+import { handleRequest } from '../utils/utils';
 
 export class AuthController {
   private authService;
@@ -10,101 +11,85 @@ export class AuthController {
   constructor() {
     this.authService = new AuthService();
 
-    this.register = this.register.bind(this);
-    this.login = this.login.bind(this);
-    this.changePassword = this.changePassword.bind(this);
-    this.telegramCheckOtp = this.telegramCheckOtp.bind(this);
-    this.telegramSetPassword = this.telegramSetPassword.bind(this);
-    this.telegramCheckPassword = this.telegramCheckPassword.bind(this);
+    this.register = handleRequest(this.register.bind(this));
+    this.login = handleRequest(this.login.bind(this));
+    this.changePassword = handleRequest(this.changePassword.bind(this));
+    this.telegramCheckOtp = handleRequest(this.telegramCheckOtp.bind(this));
+    this.telegramSetPassword = handleRequest(
+      this.telegramSetPassword.bind(this),
+    );
+    this.telegramCheckPassword = handleRequest(
+      this.telegramCheckPassword.bind(this),
+    );
   }
 
   public async register(req: Request, res: Response): Promise<void> {
-    const { username, password, phoneNumber, fullName, email }: IUserSchema =
+    const { username, password, phoneNumber, fullName, ...rest }: IUserSchema =
       req.body;
 
-    try {
-      const user = await this.authService.register({
-        username,
-        password,
-        phoneNumber,
-        fullName,
-        email,
-      });
+    const response = await this.authService.register({
+      username,
+      password,
+      phoneNumber,
+      fullName,
+      ...rest,
+    });
 
-      res.status(201).json(user);
-    } catch (error: any) {
-      res.status(error.status).json({ error: error.message });
-    }
+    res.status(201).json(response);
   }
 
   public async login(req: Request, res: Response): Promise<void> {
     const { phoneNumber, password } = req.body;
 
-    try {
-      const user = await this.authService.login({
-        phoneNumber,
-        password,
-      });
+    const response = await this.authService.login({
+      phoneNumber,
+      password,
+    });
 
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(error.status).json({ error: error.message });
-    }
+    res.status(200).json(response);
   }
 
   public async changePassword(req: Request, res: Response): Promise<void> {
-    try {
-      const { confirmPassword, password } = req.body;
-      const userId = req.userId;
+    const { confirmPassword, password } = req.body;
+    const userId = req.userId;
 
-      if (!userId) throw { status: 404, message: 'User not found' };
+    if (!userId) throw { status: 404, message: ErrorMessages.USER_NOT_FOUND };
 
-      const user = await this.authService.changePassword({
-        userId,
-        password,
-        confirmPassword,
-      });
+    const response = await this.authService.changePassword({
+      userId,
+      password,
+      confirmPassword,
+    });
 
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(error.status).json({ error: error.message });
-    }
+    res.status(200).json(response);
   }
 
   public async telegramCheckOtp(req: Request, res: Response): Promise<void> {
     const { otp, deviceId } = req.body;
 
-    try {
-      const user = await this.authService.telegramCheckOtp({
-        otp,
-        deviceId,
-      });
+    const response = await this.authService.telegramCheckOtp({
+      otp,
+      deviceId,
+    });
 
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(error.status).json({ error: error.message });
-    }
+    res.status(200).json(response);
   }
 
   public async telegramSetPassword(req: Request, res: Response): Promise<void> {
     const { password, confirmPassword } = req.body;
     const { userId } = req;
 
-    try {
-      if (!userId) {
-        throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
-      }
-
-      const user = await this.authService.telegramSetPassword({
-        userId,
-        password,
-        confirmPassword,
-      });
-
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(error.status).json({ error: error.message });
+    if (!userId) {
+      throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
     }
+
+    const response = await this.authService.telegramSetPassword({
+      userId,
+      password,
+      confirmPassword,
+    });
+
+    res.status(200).json(response);
   }
 
   public async telegramCheckPassword(
@@ -114,18 +99,15 @@ export class AuthController {
     const { password } = req.body;
     const { phoneNumber } = req;
 
-    try {
-      if (!phoneNumber)
-        throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
-
-      const user = await this.authService.telegramCheckPassword({
-        password,
-        phoneNumber,
-      });
-
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(error.status).json({ error: error.message });
+    if (!phoneNumber) {
+      throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
     }
+
+    const response = await this.authService.telegramCheckPassword({
+      password,
+      phoneNumber,
+    });
+
+    res.status(200).json(response);
   }
 }
