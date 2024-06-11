@@ -16,7 +16,7 @@ import { UniqueUsernameGenerator } from '../utils/classes/unique-username-genera
 import { TelegramService } from './telegram.service';
 import { generateJWTToken } from '../utils/utils';
 
-export class UserService {
+export class AuthService {
   private telegramService: TelegramService;
 
   constructor() {

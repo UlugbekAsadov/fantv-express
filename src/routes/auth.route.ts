@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UserController } from '../controllers/auth.controller';
+import { AuthController } from '../controllers/auth.controller';
 import { protectedRoute } from '../middlewares/protectedRoute';
 import {
   validateChangePassword,
@@ -8,43 +8,43 @@ import {
 } from '../validator/user.validator';
 import { validateRequest } from '../middlewares/validate.middleware';
 
-const userRoutes = Router();
-const userController = new UserController();
+const authRoutes = Router();
+const authController = new AuthController();
 
-userRoutes.post(
+authRoutes.post(
   '/register',
   validateRegister(),
   validateRequest,
-  userController.register,
+  authController.register,
 );
-userRoutes.post(
+authRoutes.post(
   '/login',
   validateLogin(),
   validateRequest,
-  userController.login,
+  authController.login,
 );
-userRoutes.post(
+authRoutes.post(
   '/change-password',
   protectedRoute,
   validateChangePassword(),
   validateRequest,
-  userController.changePassword,
+  authController.changePassword,
 );
 
-userRoutes.post('/telegram-check-otp', userController.telegramCheckOtp);
-userRoutes.post(
+authRoutes.post('/telegram-check-otp', authController.telegramCheckOtp);
+authRoutes.post(
   '/telegram-set-password',
   protectedRoute,
   validateChangePassword(),
   validateRequest,
-  userController.telegramSetPassword,
+  authController.telegramSetPassword,
 );
-userRoutes.post(
+authRoutes.post(
   '/telegram-check-password',
   protectedRoute,
   validateChangePassword()[0],
   validateRequest,
-  userController.telegramCheckPassword,
+  authController.telegramCheckPassword,
 );
 
-export { userRoutes };
+export { authRoutes };

@@ -1,14 +1,14 @@
 import { Response } from 'express';
-import { UserService } from '../services/auth.service';
+import { AuthService } from '../services/auth.service';
 import { IUserSchema } from '../models/user.model';
 import { Request } from '../utils/interfaces/express.interface';
 import { ErrorMessages } from '../utils/enums/error-response.enum';
 
-export class UserController {
-  private userService;
+export class AuthController {
+  private authService;
 
   constructor() {
-    this.userService = new UserService();
+    this.authService = new AuthService();
 
     this.register = this.register.bind(this);
     this.login = this.login.bind(this);
@@ -23,7 +23,7 @@ export class UserController {
       req.body;
 
     try {
-      const user = await this.userService.register({
+      const user = await this.authService.register({
         username,
         password,
         phoneNumber,
@@ -41,7 +41,7 @@ export class UserController {
     const { phoneNumber, password } = req.body;
 
     try {
-      const user = await this.userService.login({
+      const user = await this.authService.login({
         phoneNumber,
         password,
       });
@@ -59,7 +59,7 @@ export class UserController {
 
       if (!userId) throw { status: 404, message: 'User not found' };
 
-      const user = await this.userService.changePassword({
+      const user = await this.authService.changePassword({
         userId,
         password,
         confirmPassword,
@@ -75,7 +75,7 @@ export class UserController {
     const { otp, deviceId } = req.body;
 
     try {
-      const user = await this.userService.telegramCheckOtp({
+      const user = await this.authService.telegramCheckOtp({
         otp,
         deviceId,
       });
@@ -95,7 +95,7 @@ export class UserController {
     }
 
     try {
-      const user = await this.userService.telegramSetPassword({
+      const user = await this.authService.telegramSetPassword({
         userId,
         password,
         confirmPassword,
@@ -115,9 +115,10 @@ export class UserController {
     const { phoneNumber } = req;
 
     try {
-      if (!phoneNumber) throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
+      if (!phoneNumber)
+        throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
 
-      const user = await this.userService.telegramCheckPassword({
+      const user = await this.authService.telegramCheckPassword({
         password,
         phoneNumber,
       });
