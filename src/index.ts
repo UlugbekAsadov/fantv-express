@@ -14,9 +14,9 @@ const port = process.env.PORT || 3000;
 
 connectDb();
 
-app.get('/v1/status', (_, res) => res.status(200).json({ ok: true }));
+app.get('api/v1/status', (_, res) => res.status(200).json({ ok: true }));
 
-app.use('/v1/auth', userRoutes);
+app.use('api/v1/auth', userRoutes);
 
 app.listen(port, async () => {
   console.log(`
