@@ -1,35 +1,66 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import { connectDb } from './configs/db.config';
-import { authRoutes } from './routes/auth.route';
-import { userRoutes } from './routes/user.route';
-import cors from 'cors';
+import { config } from './configs';
+import { databaseConnection } from './configs/db.config';
+import express, { Express } from 'express';
+import { FanTvServer } from './server';
+import Logger from 'bunyan';
 
-dotenv.config();
+const log: Logger = config.createLogger('app');
 
-const app = express();
+class Application {
+  public initialize(): void {
+    this.loadconfig();
 
-app.use(express.json());
+    databaseConnection();
+    const app: Express = express();
+    const server: FanTvServer = new FanTvServer(app);
 
-const port = process.env.PORT || 3000;
+    server.start();
 
-app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+    Application.handleExit();
+  }
 
-connectDb();
+  private loadconfig() {
+    config.validateConfig();
+  }
 
-app.get('/api/v1/status', (_, res) => res.status(200).json({ ok: true }));
+  private static handleExit(): void {
+    process.on('uncaughtException', (error: Error) => {
+      log.error(`There was an uncaught error: ${error}`);
+      Application.shutDownProperly(1);
+    });
 
-app.use('/api/v1/auth', authRoutes);
+    process.on('unhandleRejection', (reason: Error) => {
+      log.error(`Unhandled rejection at promise: ${reason}`);
+      Application.shutDownProperly(2);
+    });
 
-app.use('/api/v1', userRoutes);
+    process.on('SIGTERM', () => {
+      log.error('Caught SIGTERM');
+      Application.shutDownProperly(2);
+    });
 
-app.listen(port, async () => {
-  console.log(`
-    =================================================
-                                                   
-          [express]: http://localhost:${port}         
-                                                          
-    =================================================
-  `);
-});
+    process.on('SIGINT', () => {
+      log.error('Caught SIGINT');
+      Application.shutDownProperly(2);
+    });
+
+    process.on('exit', () => {
+      log.error('Exiting');
+    });
+  }
+
+  private static shutDownProperly(exitCode: number): void {
+    Promise.resolve()
+      .then(() => {
+        log.info('Shutdown complete');
+        process.exit(exitCode);
+      })
+      .catch((error) => {
+        log.error(`Error during shutdown: ${error}`);
+        process.exit(1);
+      });
+  }
+}
+
+const app: Application = new Application();
+app.initialize();

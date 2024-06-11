@@ -1,10 +1,18 @@
 import { Router } from 'express';
-import { protectedRoute } from '../middlewares/protectedRoute';
-import { UserController } from '../controllers/user.controller';
+import { userController } from '../controllers/user.controller';
 
-const userRoutes = Router();
-const userController = new UserController();
+class UserRoutes {
+  private router: Router;
 
-userRoutes.get('/me', protectedRoute, userController.getMe);
+  constructor() {
+    this.router = Router();
+  }
 
-export { userRoutes };
+  public routes() {
+    this.router.get('/me', userController.getMe);
+
+    return this.router;
+  }
+}
+
+export const userRoutes: UserRoutes = new UserRoutes();

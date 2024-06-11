@@ -3,7 +3,7 @@ import { UserService } from '../services/user.service';
 import { Request } from '../utils/interfaces/express.interface';
 import { ERROR_MESSAGES } from '../utils/error-messages/error-messages';
 
-export class UserController {
+class UserController {
   private userService: UserService;
 
   constructor() {
@@ -25,3 +25,5 @@ export class UserController {
     }
   }
 }
+
+export const userController: UserController = new UserController();

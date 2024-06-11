@@ -1,13 +1,13 @@
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 import { generateOTP } from './utils/classes/generate-otp';
-import { connectDb } from './configs/db.config';
+import { databaseConnection } from './configs/db.config';
 import { TelegramService } from './services/telegram.service';
 import { UniqueUsernameGenerator } from './utils/classes/unique-username-generator';
 
 dotenv.config();
 
-connectDb();
+databaseConnection();
 
 const token = process.env.TELEGRAM_BOT_TOKEN || '';
 const bot = new TelegramBot(token, { polling: true });

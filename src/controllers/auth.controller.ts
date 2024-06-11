@@ -5,7 +5,7 @@ import { Request } from '../utils/interfaces/express.interface';
 import { ErrorMessages } from '../utils/enums/error-response.enum';
 import { handleRequest } from '../utils/utils';
 
-export class AuthController {
+class AuthController {
   private authService;
 
   constructor() {
@@ -111,3 +111,5 @@ export class AuthController {
     res.status(200).json(response);
   }
 }
+
+export const authController: AuthController = new AuthController();

@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
 import { User } from '../models/user.model';
-import { connectDb } from '../configs/db.config';
+import { databaseConnection } from '../configs/db.config';
 
 export const updateUsers = async () => {
   try {
-    await connectDb();
+    await databaseConnection();
 
     // Update all users to set default values for new fields
     await User.updateMany({}, { $set: { followers: 0, price: 0 } });
