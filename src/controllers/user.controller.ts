@@ -16,8 +16,12 @@ export class UserController {
     if (!userId)
       return res.status(404).json({ error: ERROR_MESSAGES.USER_NOT_FOUND });
 
-    const user = await this.userService.getUser(userId);
+    try {
+      const user = await this.userService.getUser(userId);
 
-    return res.status(200).json(user);
+      return res.status(200).json(user);
+    } catch (error: any) {
+      res.status(error.status).json({ error: error.message });
+    }
   }
 }

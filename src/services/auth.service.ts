@@ -63,26 +63,22 @@ export class AuthService {
     phoneNumber,
     password,
   }: ILogin): Promise<ILoginResponse> {
-    try {
-      const user = await User.findOne({ phoneNumber });
+    const user = await User.findOne({ phoneNumber });
 
-      if (!user)
-        throw {
-          status: 404,
-          message: ErrorMessages.USER_NOT_FOUND,
-        };
+    if (!user)
+      throw {
+        status: 404,
+        message: ErrorMessages.USER_NOT_FOUND,
+      };
 
-      const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, user.password);
 
-      if (!isMatch)
-        throw { status: 401, message: ErrorMessages.INVALID_PASSWORD };
+    if (!isMatch)
+      throw { status: 401, message: ErrorMessages.INVALID_PASSWORD };
 
-      const jwt = generateJWTToken(user);
+    const jwt = generateJWTToken(user);
 
-      return { access_token: jwt, user: user };
-    } catch (error) {
-      throw error;
-    }
+    return { access_token: jwt, user: user };
   }
 
   public async changePassword({
@@ -174,17 +170,13 @@ export class AuthService {
     password: string;
     phoneNumber: string;
   }) {
-    try {
-      const loginData = await this.login({ phoneNumber, password });
+    const loginData = await this.login({ phoneNumber, password });
 
-      if (loginData.user) {
-        await this.telegramService.telegramDeleteUser(phoneNumber);
-        return loginData;
-      }
-
-      throw { message: ErrorMessages.PASSWORD_DID_NOT_MATCHED, status: 401 };
-    } catch (error) {
-      throw error;
+    if (loginData.user) {
+      await this.telegramService.telegramDeleteUser(phoneNumber);
+      return loginData;
     }
+
+    throw { message: ErrorMessages.PASSWORD_DID_NOT_MATCHED, status: 401 };
   }
 }

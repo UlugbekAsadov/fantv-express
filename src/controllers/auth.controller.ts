@@ -33,7 +33,7 @@ export class AuthController {
 
       res.status(201).json(user);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(error.status).json({ error: error.message });
     }
   }
 
@@ -48,7 +48,7 @@ export class AuthController {
 
       res.status(200).json(user);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(error.status).json({ error: error.message });
     }
   }
 
@@ -67,7 +67,7 @@ export class AuthController {
 
       res.status(200).json(user);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(error.status).json({ error: error.message });
     }
   }
 
@@ -82,7 +82,7 @@ export class AuthController {
 
       res.status(200).json(user);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(error.status).json({ error: error.message });
     }
   }
 
@@ -90,11 +90,11 @@ export class AuthController {
     const { password, confirmPassword } = req.body;
     const { userId } = req;
 
-    if (!userId) {
-      throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
-    }
-
     try {
+      if (!userId) {
+        throw { message: ErrorMessages.ACCESS_DENIED, status: 401 };
+      }
+
       const user = await this.authService.telegramSetPassword({
         userId,
         password,
@@ -103,7 +103,7 @@ export class AuthController {
 
       res.status(200).json(user);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(error.status).json({ error: error.message });
     }
   }
 
@@ -125,7 +125,7 @@ export class AuthController {
 
       res.status(200).json(user);
     } catch (error: any) {
-      res.status(500).json({ error: error.message });
+      res.status(error.status).json({ error: error.message });
     }
   }
 }
