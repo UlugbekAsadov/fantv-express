@@ -21,5 +21,3 @@ export class AuthMiddlewares {
     }
   }
 }
-
-export const authMiddlewares: AuthMiddlewares = new AuthMiddlewares();
