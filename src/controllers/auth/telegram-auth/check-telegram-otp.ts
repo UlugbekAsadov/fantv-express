@@ -7,8 +7,11 @@ import { generateJWTToken } from '../../../utils/utils';
 import { authService } from '../../../services/auth.service';
 import HTTP_STATUS from 'http-status-codes';
 import { SuccessMessages } from '../../../utils/enums/success-response.enum';
+import { joiValidation } from '../../../utils/decorators/joi-decorator';
+import { checkTelegramOtpSchema } from '../../../schemas/auth/telegram-auth/check-telegram-otp.schema';
 
 export class CheckTelegramOtp {
+  @joiValidation(checkTelegramOtpSchema)
   public async read(req: Request, res: Response, next: NextFunction) {
     const { otp, deviceId } = req.body;
 

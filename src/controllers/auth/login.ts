@@ -6,8 +6,11 @@ import { authService } from '../../services/auth.service';
 import { generateJWTToken } from '../../utils/utils';
 import HTTPS_STATUS from 'http-status-codes';
 import { Request } from '../../utils/interfaces/express.interface';
+import { loginSchema } from '../../schemas/auth/login.schema';
+import { joiValidation } from '../../utils/decorators/joi-decorator';
 
 export class Login {
+  @joiValidation(loginSchema)
   public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { phoneNumber, password } = req.body;
 

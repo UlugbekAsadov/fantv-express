@@ -4,8 +4,11 @@ import { authService } from '../../services/auth.service';
 import HTTP_STATUS from 'http-status-codes';
 import { hash } from 'bcrypt';
 import { SuccessMessages } from '../../utils/enums/success-response.enum';
+import { joiValidation } from '../../utils/decorators/joi-decorator';
+import { changePasswordSchema } from '../../schemas/auth/change-password.schema';
 
 export class ChangePassword {
+  @joiValidation(changePasswordSchema)
   public async update(req: Request, res: Response): Promise<void> {
     const { password } = req.body;
     const authId = req.authId as string;

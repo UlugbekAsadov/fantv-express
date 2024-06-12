@@ -4,8 +4,11 @@ import { telegramAuthService } from '../../../services/telegram-auth.service';
 import { Register } from '../register';
 import { BadRequestError } from '../../../utils/helper/error-handler';
 import { ErrorMessages } from '../../../utils/enums/error-response.enum';
+import { joiValidation } from '../../../utils/decorators/joi-decorator';
+import { changePasswordSchema } from '../../../schemas/auth/change-password.schema';
 
 export class SetTelegramPassword {
+  @joiValidation(changePasswordSchema)
   public async update(req: Request, res: Response, next: NextFunction) {
     const { password } = req.body;
     const telegramAuthId = req.userId as string;

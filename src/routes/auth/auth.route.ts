@@ -1,6 +1,4 @@
 import { Router } from 'express';
-import { validateLogin, validateRegister } from '../../validator/user.validator';
-import { validateRequest } from '../../middlewares/validate.middleware';
 import { AuthMiddlewares } from '../../middlewares/protected-route.middleware';
 import { Register } from '../../controllers/auth/register';
 import { Login } from '../../controllers/auth/login';
@@ -19,8 +17,8 @@ class AuthRoutes {
   }
 
   public unprotectedRoutes = (): Router => {
-    this.router.post('/auth/register', validateRegister(), validateRequest, Register.prototype.create);
-    this.router.post('/auth/login', validateLogin(), validateRequest, Login.prototype.read);
+    this.router.post('/auth/register', Register.prototype.create);
+    this.router.post('/auth/login', Login.prototype.read);
     this.router.post('/auth/telegram-check-otp', CheckTelegramOtp.prototype.read);
 
     return this.router;

@@ -9,8 +9,11 @@ import { UserModel } from '../../models/user.model';
 import { AuthModel } from '../../models/auth.model';
 import { authService } from '../../services/auth.service';
 import { generateJWTToken } from '../../utils/utils';
+import { joiValidation } from '../../utils/decorators/joi-decorator';
+import { registerSchema } from '../../schemas/auth/register.schema';
 
 export class Register {
+  @joiValidation(registerSchema)
   public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
     const { username, password, phoneNumber, fullName, authType } = req.body as IRegisterRequestData;
 
