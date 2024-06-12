@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { UserService } from '../services/user.service';
 import { Request } from '../utils/interfaces/express.interface';
 import { ERROR_MESSAGES } from '../utils/error-messages/error-messages';
+import { userService as newUserService } from '../services/user.service';
 
 class UserController {
   private userService: UserService;
@@ -12,12 +13,12 @@ class UserController {
   }
 
   public async getMe(req: Request, res: Response) {
-    const userId = req.userId;
-    if (!userId)
+    const authId = req.authId;
+    if (!authId)
       return res.status(404).json({ error: ERROR_MESSAGES.USER_NOT_FOUND });
 
     try {
-      const user = await this.userService.getUser(userId);
+      const user = await newUserService.getUserByAuthId(authId);
 
       return res.status(200).json(user);
     } catch (error: any) {

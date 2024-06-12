@@ -7,18 +7,14 @@ export class AuthMiddlewares {
   public verifyUser(req: Request, res: Response, next: NextFunction) {
     const bearerToken = req.header('Authorization');
 
-    if (!bearerToken)
-      return res.status(401).json({ error: ErrorMessages.ACCESS_DENIED });
+    if (!bearerToken) return res.status(401).json({ error: ErrorMessages.ACCESS_DENIED });
 
     const [_, token] = bearerToken.split(' ');
 
     try {
-      const decoded = jwt.verify(
-        token,
-        process.env.JWT_SECRET as string,
-      ) as JwtPayload;
+      const decoded: JwtPayload = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
       req.userId = decoded.userId;
-      req.phoneNumber = decoded.phoneNumber;
+      req.authId = decoded.authId;
       next();
     } catch (error) {
       res.status(401).json({ error: ErrorMessages.INVALID_TOKEN });

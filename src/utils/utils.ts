@@ -1,19 +1,13 @@
 import { Request, Response } from 'express';
-import { IUserSchema } from '../models/user.model';
 import jwt from 'jsonwebtoken';
-import { Error } from './interfaces/express.interface';
+import { IUserDocument } from './interfaces/user.interface';
+import { IAuthDocument } from './interfaces/auth.interface';
+import { ITelegramAuthDocument } from './interfaces/telegram-auth.interface';
 
-export function generateJWTToken(
-  user: IUserSchema extends Document ? IUserSchema : any,
-) {
-  const { _id: userId, phoneNumber } = user;
-  const jwtToken = jwt.sign(
-    { userId, phoneNumber },
-    process.env.JWT_SECRET as string,
-    {
-      expiresIn: '1d',
-    },
-  );
+export function generateJWTToken(auth: IAuthDocument | ITelegramAuthDocument, userId: string) {
+  const jwtToken = jwt.sign({ userId, authId: auth._id, phoneNumber: auth.phoneNumber }, process.env.JWT_SECRET as string, {
+    expiresIn: '1d',
+  });
 
   return jwtToken;
 }
@@ -23,9 +17,7 @@ export const handleRequest = (fn: Function) => {
     try {
       return await fn(req, res);
     } catch (error: any) {
-      res
-        .status(error.status || 500)
-        .json({ error: error.message || 'Internal Server Error' });
+      res.status(error.status || 500).json({ error: error.message || 'Internal Server Error' });
     }
   };
 };

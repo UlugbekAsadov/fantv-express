@@ -10,7 +10,6 @@ export const validateRegister = () => {
       .isString()
       .isLength({ min: 6 })
       .withMessage('Password must be at least 6 characters long'),
-    check('email').isEmail().withMessage('Email must be valid'),
     check('phoneNumber')
       .isMobilePhone('any')
       .withMessage('Phone number must be valid'),
@@ -25,7 +24,7 @@ export const validateLogin = () => {
   return [
     check('phoneNumber')
       .isLength({ min: 13 })
-      .withMessage("Phone must be at least 13 characters long"),
+      .withMessage('Phone must be at least 13 characters long'),
     check('password')
       .isString()
       .isLength({ min: 6 })
