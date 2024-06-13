@@ -38,7 +38,7 @@ bot.on('contact', async (msg) => {
   const chatId = msg.chat.id;
   const phoneNumber = msg.contact ? msg.contact.phone_number : '';
   const otpExpireDate = new Date(Date.now() + 2000 * 60 * 1000); // 2 minutes from now
-  const fullName = msg.from?.first_name + ' ' + msg.from?.last_name;
+  const fullName = msg.from?.first_name + ' ' + msg.from?.last_name || '';
 
   const deviceId = userParams[chatId]?.replace(' ', '');
 
