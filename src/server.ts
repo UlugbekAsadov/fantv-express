@@ -1,16 +1,9 @@
-import {
-  Application,
-  NextFunction,
-  Request,
-  Response,
-  json,
-  urlencoded,
-} from 'express';
+import { Application, NextFunction, Request, Response, json, urlencoded } from 'express';
 import { config } from './configs';
 import Logger from 'bunyan';
 import cors from 'cors';
 import helment from 'helmet';
-import { applicationRoutes } from './routes';
+import applicationRoutes from './routes';
 import { IErrorResponse } from './utils/interfaces/error.interface';
 import { CustomError } from './utils/helper/error-handler';
 import HTTPS_STATUS from 'http-status-codes';
@@ -48,30 +41,26 @@ export class FanTvServer {
 
   private globalErrorHandler(app: Application): void {
     app.all('*', (req: Request, res: Response) => {
-      res
-        .status(HTTPS_STATUS.NOT_FOUND)
-        .json({ message: `${req.originalUrl} not found` });
+      res.status(HTTPS_STATUS.NOT_FOUND).json({ message: `${req.originalUrl} not found` });
     });
 
-    app.use(
-      (
-        error: IErrorResponse,
-        _req: Request,
-        res: Response,
-        next: NextFunction,
-      ) => {
-        log.error(error);
-        if (error instanceof CustomError) {
-          return res.status(error.statusCode).json(error.serializeErrors());
-        }
-        next();
-      },
-    );
+    app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+      log.error(error);
+      if (error instanceof CustomError) {
+        return res.status(error.statusCode).json(error.serializeErrors());
+      }
+
+      next();
+    });
   }
 
   private startServer(app: Application): void {
-    app.listen(config.PORT, () => {
-      log.info(`Server is running on port ${config.PORT}`);
-    });
+    try {
+      app.listen(config.PORT, () => {
+        log.info(`Server is running on port ${config.PORT}`);
+      });
+    } catch (error) {
+      log.error(error);
+    }
   }
 }

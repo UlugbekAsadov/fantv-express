@@ -1,54 +1,22 @@
-import { IUserSchema } from '../../models/user.model';
+import { ObjectId } from 'mongodb';
+import { AuthTypes } from '../types/auth.type';
 
-export interface IRegister {
-  username?: string;
-  password: string;
-  email?: string;
-  phoneNumber: string;
-  fullName?: string;
-  isActive?: boolean;
-  followers?: number;
-  price?: number;
-}
-
-export interface IRegisterResponse {
-  access_token: string;
-  user: IUserSchema;
-}
-
-export interface ILogin {
-  phoneNumber: string;
-  password: string;
-}
-
-export interface ILoginResponse {
-  access_token: string;
-  user: IUserSchema;
-}
-
-export interface IChangePassword {
-  userId: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface ITelegramLoginRequest {
-  otp: string;
-  deviceId: string;
-}
-
-export interface ITelegramCreateUser {
-  userId: string;
-  password: string;
-  confirmPassword: string;
-}
-
-export interface ITelegramUser {
-  deviceId: string;
-  otp: string;
-  phoneNumber: string;
-  password?: string;
-  expireDate: Date;
+export interface IAuthDocument extends Document {
+  _id: string | ObjectId;
   fullName: string;
   username: string;
+  password: string;
+  phoneNumber: string;
+  authType: AuthTypes;
+  comparePassword(password: string): Promise<boolean>;
+  hashPassword(password: string): Promise<string>;
+}
+
+export interface IRegisterRequestData {
+  fullName: string;
+  username: string;
+  password: string;
+  phoneNumber: string;
+  confirmPassword: string;
+  authType?: AuthTypes;
 }

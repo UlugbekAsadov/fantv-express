@@ -1,29 +1,38 @@
+import { ErrorMessages } from '../enums/error-response.enum';
 import { IError } from '../interfaces/error.interface';
 import HTTP_STATUS from 'http-status-codes';
 
 export abstract class CustomError extends Error {
   abstract statusCode: number;
   abstract status: string;
-
+  public validationError?: string;
   constructor(message: string) {
     super(message);
   }
 
   serializeErrors(): IError {
-    return {
+    const errorBody: IError = {
       message: this.message,
       status: this.status,
       statusCode: this.statusCode,
     };
+
+    if (this.validationError) {
+      errorBody.validationError = this.validationError;
+    }
+
+    return errorBody;
   }
 }
 
 export class JoiRequestValidationError extends CustomError {
   statusCode = HTTP_STATUS.BAD_REQUEST;
   status = 'error';
+  validationError: string;
 
-  constructor(message: string) {
+  constructor(message: string, validationError: string) {
     super(message);
+    this.validationError = validationError;
   }
 }
 

@@ -1,9 +1,10 @@
 import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
-import { generateOTP } from './utils/classes/generate-otp';
+import { generateOTP } from './utils/helper/generate-otp';
 import { databaseConnection } from './configs/db.config';
-import { TelegramService } from './services/telegram.service';
-import { UniqueUsernameGenerator } from './utils/classes/unique-username-generator';
+import { telegramAuthService } from './services/telegram-auth.service';
+import { TelegramAuthModel } from './models/telegram-auth.model';
+import { generateRandomUsername } from './utils/helper/unique-username-generator';
 
 dotenv.config();
 
@@ -38,10 +39,9 @@ bot.on('contact', async (msg) => {
   const phoneNumber = msg.contact ? msg.contact.phone_number : '';
   const otpExpireDate = new Date(Date.now() + 2000 * 60 * 1000); // 2 minutes from now
   const fullName = msg.from?.first_name + ' ' + msg.from?.last_name;
-  const uniqueUserName = new UniqueUsernameGenerator();
-  const username = msg.from?.username || uniqueUserName.generateUsername(10);
 
-  const deviceId = userParams[chatId].replace(' ', '');
+  const deviceId = userParams[chatId]?.replace(' ', '');
+
   if (!deviceId) {
     bot.sendMessage(chatId, "Sayt orqali botga kirib qaytadan urunib ko'ring.");
     return;
@@ -49,19 +49,24 @@ bot.on('contact', async (msg) => {
 
   try {
     const otp = generateOTP();
-
     bot.sendMessage(chatId, `Sizning kodingiz: ${otp}`);
 
-    const telegramService = new TelegramService();
+    const existingTelegramAuth = await telegramAuthService.getTelegramAuthByDeviceId(deviceId);
 
-    await telegramService.telegramCreateUser({
+    if (existingTelegramAuth) {
+      return await telegramAuthService.refreshOtpByDeviceId(deviceId, otp, otpExpireDate);
+    }
+
+    const newTelegramAuth = {
       otp,
       deviceId,
-      phoneNumber,
+      phoneNumber: `+${phoneNumber}`,
       expireDate: otpExpireDate,
-      fullName,
-      username,
-    });
+      fullName: fullName || 'Telegram User',
+      username: generateRandomUsername.generateUsername(),
+    };
+    const telegramAuth = new TelegramAuthModel(newTelegramAuth);
+    telegramAuth.save();
   } catch (error: any) {
     bot.sendMessage(chatId, error.message);
   }

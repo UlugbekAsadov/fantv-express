@@ -1,22 +1,10 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import bcrypt from 'bcrypt';
+import { IUserDocument } from '../utils/interfaces/user.interface';
 
-export interface IUserSchema {
-  username: string;
-  password: string;
-  email?: string;
-  phoneNumber: string;
-  fullName: string;
-  isActive?: boolean;
-  followers?: number;
-  price?: number;
-  balance?: number;
-}
-
-export const UserSchema: Schema<IUserSchema> = new Schema(
+export const UserSchema: Schema = new Schema(
   {
+    authId: { type: mongoose.Schema.Types.ObjectId, ref: 'Auth', index: true },
     username: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
     email: { type: String },
     phoneNumber: { type: String, required: true, unique: true },
     fullName: { type: String, required: true },
@@ -24,26 +12,18 @@ export const UserSchema: Schema<IUserSchema> = new Schema(
     followers: { type: Number, default: 0 },
     price: { type: Number, default: 0 },
     balance: { type: Number, default: 0 },
-
+    profilePhoto: { type: String, default: '' },
+    coverPhoto: { type: String, default: '' },
+    social: {
+      facebook: { type: String, default: '' },
+      instagram: { type: String, default: '' },
+      twitter: { type: String, default: '' },
+      youtube: { type: String, default: '' },
+    },
   },
   {
     timestamps: true,
   },
 );
 
-UserSchema.pre<IUserSchema>('save', async function (next) {
-  const user = this as IUserSchema extends Document ? IUserSchema : any;
-
-  try {
-    if (user.isModified('password')) {
-      const salt = await bcrypt.genSalt(10);
-      const hash = await bcrypt.hash(user.password, salt);
-      user.password = hash;
-    }
-    next();
-  } catch (error: any) {
-    next(error);
-  }
-});
-
-export const User = mongoose.model<IUserSchema>('User', UserSchema);
+export const UserModel = mongoose.model<IUserDocument>('User', UserSchema);
