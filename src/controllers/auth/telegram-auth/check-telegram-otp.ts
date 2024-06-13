@@ -15,28 +15,28 @@ export class CheckTelegramOtp {
   public async read(req: Request, res: Response, next: NextFunction) {
     const { otp, deviceId } = req.body;
 
-    const existingTelegramUser = await telegramAuthService.getTelegramAuthByDeviceId(deviceId);
+    const existingTelegramAuth = await telegramAuthService.getTelegramAuthByDeviceId(deviceId);
 
-    if (!existingTelegramUser) {
-      return next(new NotFoundError(ErrorMessages.USER_NOT_FOUND));
+    if (!existingTelegramAuth) {
+      return next(new NotFoundError(ErrorMessages.TELEGRAM_AUTH_NOT_FOUND));
     }
 
-    if (new Date(existingTelegramUser.expireDate).getTime() < new Date().getTime()) {
+    if (new Date(existingTelegramAuth.expireDate).getTime() < new Date().getTime()) {
       return next(new BadRequestError(ErrorMessages.OTP_EXPIRED));
     }
 
-    if (existingTelegramUser.otp !== otp) {
+    if (existingTelegramAuth.otp !== otp) {
       return next(new BadRequestError(ErrorMessages.OTP_DID_NOT_MATCH));
     }
 
-    const auth = await authService.getAuthByPhoneNumber(existingTelegramUser.phoneNumber);
+    const auth = await authService.getAuthByPhoneNumber(existingTelegramAuth.phoneNumber);
 
     if (auth) {
-      const jwtToken = generateJWTToken(auth, existingTelegramUser.id);
+      const jwtToken = generateJWTToken(auth, existingTelegramAuth.id);
       return res.status(HTTP_STATUS.OK).json({ token: jwtToken, message: ErrorMessages.USER_EXISTS });
     }
 
-    const jwtToken = generateJWTToken(existingTelegramUser, existingTelegramUser.id);
+    const jwtToken = generateJWTToken(existingTelegramAuth, existingTelegramAuth.id);
 
     return res.status(HTTP_STATUS.CREATED).json({ token: jwtToken, message: SuccessMessages.USER_CREATED });
   }
