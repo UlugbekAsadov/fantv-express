@@ -6,6 +6,7 @@ import { ErrorMessages } from '../../../utils/enums/error-response.enum';
 import { BadRequestError } from '../../../utils/helper/error-handler';
 import { joiValidation } from '../../../utils/decorators/joi-decorator';
 import { checkTelegramPasswordSchema } from '../../../schemas/auth/telegram-auth/check-telegram-password.schema';
+import { AuthType } from '../../../utils/enums/auth.enum';
 
 export class CheckTelegramPassword {
   @joiValidation(checkTelegramPasswordSchema)
@@ -21,9 +22,10 @@ export class CheckTelegramPassword {
 
     req.body.password = password;
     req.body.phoneNumber = existingTelegramAuth.phoneNumber;
+    req.body.authType = AuthType.Teleram;
 
-    await Login.prototype.read(req, res, next);
+    const isLoggedIn = await Login.prototype.read(req, res, next);
 
-    await telegramAuthService.removeTelegramAuthById(telegramAuthId);
+    if (isLoggedIn) await telegramAuthService.removeTelegramAuthById(telegramAuthId);
   }
 }

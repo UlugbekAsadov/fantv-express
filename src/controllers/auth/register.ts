@@ -11,10 +11,11 @@ import { authService } from '../../services/auth.service';
 import { generateJWTToken } from '../../utils/utils';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
 import { registerSchema } from '../../schemas/auth/register.schema';
+import { AuthType } from '../../utils/enums/auth.enum';
 
 export class Register {
   @joiValidation(registerSchema)
-  public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
+  public async create(req: Request, res: Response, next: NextFunction): Promise<void | boolean> {
     const { username, password, phoneNumber, fullName, authType } = req.body as IRegisterRequestData;
 
     const existingAuth = await authService.getAuthByPhoneNumberOrUsername(phoneNumber, username);
@@ -50,6 +51,8 @@ export class Register {
     const token = generateJWTToken(auth, user.id);
 
     res.status(HTTP_STATUS.CREATED).json({ token, user });
+
+    if (authType === AuthType.Teleram) return true;
   }
 
   private userData(data: IAuthDocument): IUserDocument {

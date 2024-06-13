@@ -6,6 +6,7 @@ import { BadRequestError } from '../../../utils/helper/error-handler';
 import { ErrorMessages } from '../../../utils/enums/error-response.enum';
 import { joiValidation } from '../../../utils/decorators/joi-decorator';
 import { changePasswordSchema } from '../../../schemas/auth/change-password.schema';
+import { AuthType } from '../../../utils/enums/auth.enum';
 
 export class SetTelegramPassword {
   @joiValidation(changePasswordSchema)
@@ -23,10 +24,10 @@ export class SetTelegramPassword {
     req.body.username = telegramAuth.username;
     req.body.phoneNumber = telegramAuth.phoneNumber;
     req.body.fullName = telegramAuth.fullName;
-    req.body.authType = 'telegram';
+    req.body.authType = AuthType.Teleram;
 
-    await Register.prototype.create(req, res, next);
+    const isRegistered = await Register.prototype.create(req, res, next);
 
-    await telegramAuthService.removeTelegramAuthById(telegramAuthId);
+    if (isRegistered) await telegramAuthService.removeTelegramAuthById(telegramAuthId);
   }
 }

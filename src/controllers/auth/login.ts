@@ -8,11 +8,12 @@ import HTTPS_STATUS from 'http-status-codes';
 import { Request } from '../../utils/interfaces/express.interface';
 import { loginSchema } from '../../schemas/auth/login.schema';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
+import { AuthType } from '../../utils/enums/auth.enum';
 
 export class Login {
   @joiValidation(loginSchema)
-  public async read(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const { phoneNumber, password } = req.body;
+  public async read(req: Request, res: Response, next: NextFunction): Promise<void | boolean> {
+    const { phoneNumber, password, authType } = req.body;
 
     const existingAuth = await authService.getAuthByPhoneNumber(phoneNumber);
 
@@ -27,5 +28,7 @@ export class Login {
     const token = generateJWTToken(existingAuth, user.id);
 
     res.status(HTTPS_STATUS.OK).json({ token, user });
+
+    if (authType === AuthType.Teleram) return true;
   }
 }
