@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { Response } from 'express';
 import { userService } from '../../services/user.service';
 import { BadRequestError, NotFoundError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
@@ -12,20 +12,20 @@ import { AuthType } from '../../utils/enums/auth.enum';
 
 export class Login {
   @joiValidation(loginSchema)
-  public async read(req: Request, res: Response, next: NextFunction): Promise<void | boolean> {
+  public async read(req: Request, res: Response): Promise<void | boolean> {
     const { phoneNumber, password, authType } = req.body;
 
     const existingAuth = await authService.getAuthByPhoneNumber(phoneNumber);
 
-    if (!existingAuth) return next(new BadRequestError(ErrorMessages.AUTH_NOT_FOUND));
+    if (!existingAuth) throw new NotFoundError(ErrorMessages.AUTH_NOT_FOUND);
 
     const isPasswordMatched = await existingAuth.comparePassword(password);
 
-    if (!isPasswordMatched) return next(new BadRequestError(ErrorMessages.INVALID_PASSWORD));
+    if (!isPasswordMatched) throw new BadRequestError(ErrorMessages.INVALID_PASSWORD);
 
     const user = await userService.getUserByAuthId(existingAuth._id);
 
-    if (!user) return next(new NotFoundError(ErrorMessages.USER_NOT_FOUND));
+    if (!user) throw new NotFoundError(ErrorMessages.USER_NOT_FOUND);
 
     const token = generateJWTToken(existingAuth, user.id);
 

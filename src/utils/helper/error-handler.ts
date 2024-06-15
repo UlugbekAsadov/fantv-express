@@ -1,4 +1,3 @@
-import { ErrorMessages } from '../enums/error-response.enum';
 import { IError } from '../interfaces/error.interface';
 import HTTP_STATUS from 'http-status-codes';
 

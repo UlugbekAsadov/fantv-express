@@ -1,4 +1,3 @@
-import { NextFunction, Request, Response } from 'express';
 import { BadRequestError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import HTTP_STATUS from 'http-status-codes';
@@ -12,21 +11,19 @@ import { generateJWTToken } from '../../utils/utils';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
 import { registerSchema } from '../../schemas/auth/register.schema';
 import { AuthType } from '../../utils/enums/auth.enum';
+import { Response } from 'express';
+import { Request } from '../../utils/interfaces/express.interface';
 
 export class Register {
   @joiValidation(registerSchema)
-  public async create(req: Request, res: Response, next: NextFunction): Promise<void | boolean> {
+  public async create(req: Request, res: Response): Promise<void | boolean> {
     const { username, password, phoneNumber, fullName, authType } = req.body as IRegisterRequestData;
 
     const existingAuth = await authService.getAuthByPhoneNumberOrUsername(phoneNumber, username);
 
-    if (existingAuth?.username === username) {
-      return next(new BadRequestError(ErrorMessages.USERNAME_EXIST));
-    }
+    if (existingAuth?.username === username) throw new BadRequestError(ErrorMessages.USERNAME_EXIST);
 
-    if (existingAuth?.phoneNumber === phoneNumber) {
-      return next(new BadRequestError(ErrorMessages.PHONE_NUMBER_EXIST));
-    }
+    if (existingAuth?.phoneNumber === phoneNumber) throw new BadRequestError(ErrorMessages.PHONE_NUMBER_EXIST);
 
     const _id: ObjectId = new ObjectId();
 

@@ -1,4 +1,4 @@
-import { NextFunction, Response } from 'express';
+import { Response } from 'express';
 import { Request } from '../../../utils/interfaces/express.interface';
 import { telegramAuthService } from '../../../services/telegram-auth.service';
 import { Register } from '../register';
@@ -10,15 +10,13 @@ import { AuthType } from '../../../utils/enums/auth.enum';
 
 export class SetTelegramPassword {
   @joiValidation(changePasswordSchema)
-  public async update(req: Request, res: Response, next: NextFunction) {
+  public async update(req: Request, res: Response) {
     const { password } = req.body;
     const telegramAuthId = req.userId as string;
 
     const telegramAuth = await telegramAuthService.getTelegramAuthById(telegramAuthId);
 
-    if (!telegramAuth) {
-      return next(new BadRequestError(ErrorMessages.OTP_EXPIRED));
-    }
+    if (!telegramAuth) throw new BadRequestError(ErrorMessages.OTP_EXPIRED);
 
     req.body.password = password;
     req.body.username = telegramAuth.username;
@@ -27,7 +25,7 @@ export class SetTelegramPassword {
     req.body.authType = AuthType.Teleram;
     delete req.body.confirmPassword;
 
-    const isRegistered = await Register.prototype.create(req, res, next);
+    const isRegistered = await Register.prototype.create(req, res);
 
     if (isRegistered) await telegramAuthService.removeTelegramAuthById(telegramAuthId);
   }

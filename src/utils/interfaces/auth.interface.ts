@@ -20,3 +20,12 @@ export interface IRegisterRequestData {
   confirmPassword: string;
   authType?: AuthTypes;
 }
+
+export interface IAuthMock {
+  fullName?: string;
+  username?: string;
+  password?: string;
+  phoneNumber?: string;
+  confirmPassword?: string;
+  authType?: AuthTypes;
+}
