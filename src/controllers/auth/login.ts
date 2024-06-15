@@ -9,10 +9,11 @@ import { Request } from '../../utils/interfaces/express.interface';
 import { loginSchema } from '../../schemas/auth/login.schema';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
 import { AuthType } from '../../utils/enums/auth.enum';
+import { telegramAuthService } from '../../services/telegram-auth.service';
 
 export class Login {
   @joiValidation(loginSchema)
-  public async read(req: Request, res: Response): Promise<void | boolean> {
+  public async read(req: Request, res: Response): Promise<void> {
     const { phoneNumber, password, authType } = req.body;
 
     const existingAuth = await authService.getAuthByPhoneNumber(phoneNumber);
@@ -31,6 +32,8 @@ export class Login {
 
     res.status(HTTPS_STATUS.OK).json({ token, user });
 
-    if (authType === AuthType.Teleram) return true;
+    if (authType === AuthType.Teleram) {
+      await telegramAuthService.removeTelegramAuthByPhoneNumber(phoneNumber);
+    }
   }
 }

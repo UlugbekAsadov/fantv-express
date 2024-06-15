@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { NextFunction, Request } from 'express';
+import { Request } from 'express';
 import { ObjectSchema } from 'joi';
 import { JoiRequestValidationError } from '../helper/error-handler';
 import { ErrorMessages } from '../enums/error-response.enum';
@@ -12,12 +12,9 @@ export function joiValidation(schema: ObjectSchema): IJoiDecorator {
 
     descriptor.value = async function (...args: any[]) {
       const req: Request = args[0];
-      const next: NextFunction = args[2];
       const { error } = await Promise.resolve(schema.validate(req.body));
 
-      if (error?.details) {
-        return next(new JoiRequestValidationError(ErrorMessages.VALIDATION_ERROR, error.details[0].message));
-      }
+      if (error?.details) throw new JoiRequestValidationError(ErrorMessages.VALIDATION_ERROR, error.details[0].message);
       return originalMethod.apply(this, args);
     };
     return descriptor;

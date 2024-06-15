@@ -1,5 +1,6 @@
 import Joi, { ObjectSchema } from 'joi';
 import { AuthType } from '../../utils/enums/auth.enum';
+import { AuthTypes } from '../../utils/types/auth.type';
 
 const registerSchema: ObjectSchema = Joi.object().keys({
   username: Joi.string()
@@ -32,8 +33,8 @@ const registerSchema: ObjectSchema = Joi.object().keys({
     'string.base': 'phoneNumber must be of type string',
     'string.empty': 'phoneNumber is a required field',
   }),
-  authType: Joi.custom((value) => {
-    if (value === AuthType.Teleram || value === AuthType.Classic) {
+  authType: Joi.custom((value: AuthTypes) => {
+    if (value === 'classic' || value === 'telegram') {
       return value;
     }
     throw new Error('Invalid authType');

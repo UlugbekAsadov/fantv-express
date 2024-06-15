@@ -22,8 +22,8 @@ class TelegramAuthService {
     return auth;
   }
 
-  public async removeTelegramAuthById(id: string): Promise<ITelegramAuthDocument> {
-    const auth = (await TelegramAuthModel.findByIdAndDelete(id).exec()) as ITelegramAuthDocument;
+  public async removeTelegramAuthByPhoneNumber(phoneNumber: string): Promise<ITelegramAuthDocument> {
+    const auth = (await TelegramAuthModel.findOneAndDelete({ phoneNumber }).exec()) as ITelegramAuthDocument;
     return auth;
   }
 }

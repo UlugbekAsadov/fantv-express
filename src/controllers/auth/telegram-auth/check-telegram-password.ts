@@ -22,8 +22,6 @@ export class CheckTelegramPassword {
     req.body.phoneNumber = existingTelegramAuth.phoneNumber;
     req.body.authType = AuthType.Teleram;
 
-    const isLoggedIn = await Login.prototype.read(req, res);
-
-    if (isLoggedIn) await telegramAuthService.removeTelegramAuthById(telegramAuthId);
+    await Login.prototype.read(req, res);
   }
 }

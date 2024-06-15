@@ -25,8 +25,6 @@ export class SetTelegramPassword {
     req.body.authType = AuthType.Teleram;
     delete req.body.confirmPassword;
 
-    const isRegistered = await Register.prototype.create(req, res);
-
-    if (isRegistered) await telegramAuthService.removeTelegramAuthById(telegramAuthId);
+    await Register.prototype.create(req, res);
   }
 }

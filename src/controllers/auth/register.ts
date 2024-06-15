@@ -13,10 +13,11 @@ import { registerSchema } from '../../schemas/auth/register.schema';
 import { AuthType } from '../../utils/enums/auth.enum';
 import { Response } from 'express';
 import { Request } from '../../utils/interfaces/express.interface';
+import { telegramAuthService } from '../../services/telegram-auth.service';
 
 export class Register {
   @joiValidation(registerSchema)
-  public async create(req: Request, res: Response): Promise<void | boolean> {
+  public async create(req: Request, res: Response): Promise<void> {
     const { username, password, phoneNumber, fullName, authType } = req.body as IRegisterRequestData;
 
     const existingAuth = await authService.getAuthByPhoneNumberOrUsername(phoneNumber, username);
@@ -49,7 +50,9 @@ export class Register {
 
     res.status(HTTP_STATUS.CREATED).json({ token, user });
 
-    if (authType === AuthType.Teleram) return true;
+    if (authType === AuthType.Teleram) {
+      await telegramAuthService.removeTelegramAuthByPhoneNumber(phoneNumber);
+    }
   }
 
   private userData(data: IAuthDocument): IUserDocument {

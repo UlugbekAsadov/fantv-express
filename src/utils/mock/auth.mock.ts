@@ -1,8 +1,7 @@
 import { Response } from 'express';
 import { IAuthDocument, IAuthMock } from '../interfaces/auth.interface';
-import { JwtPayload } from '../interfaces/jwt.interface';
-import { CustomError } from '../helper/error-handler';
 import { IUserDocument } from '../interfaces/user.interface';
+import { AuthType } from '../enums/auth.enum';
 
 export const mockAuthRequest = (body: IAuthMock, userId?: string, authId?: string) => {
   return {
@@ -52,3 +51,11 @@ export const mergedAuthAndUserMock = {
     telegram: '',
   },
 } as unknown as IUserDocument;
+
+export const mockRegistrationBody: IAuthMock = {
+  username: 'username123',
+  password: 'password123',
+  phoneNumber: '+998911234567',
+  fullName: 'John Doe',
+  authType: 'classic',
+};
