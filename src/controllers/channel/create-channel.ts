@@ -5,8 +5,11 @@ import { channelService } from '../../services/channel/channel.service';
 import { BadRequestError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import HTTP_STATUS from 'http-status-codes';
+import { joiValidation } from '../../utils/decorators/joi-decorator';
+import { createChannelSchema } from '../../schemas/channel/channel-create.schema';
 
 export class Create {
+  @joiValidation(createChannelSchema)
   public async channel(req: Request, res: Response): Promise<void> {
     const { channelName, channelUsername, channelPrice, channelCurrency, status, channelDescription, channelLogo, channelBanner } =
       req.body as IChannelDocument;

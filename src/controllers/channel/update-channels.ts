@@ -7,8 +7,11 @@ import { Request } from '../../utils/interfaces/express.interface';
 import HTTP_STATUS from 'http-status-codes';
 import { SuccessMessages } from '../../utils/enums/success-response.enum';
 import { ChannelStatus } from '../../utils/enums/channel.enum';
+import { joiValidation } from '../../utils/decorators/joi-decorator';
+import { updateChannelSchema } from '../../schemas/channel/channel-update.schema';
 
 export class Update {
+  @joiValidation(updateChannelSchema)
   public async channel(req: Request, res: Response): Promise<void> {
     const { channelName, channelUsername, channelDescription, channelLogo, channelBanner, channelPrice, channelCurrency, status } =
       req.body as IChannelDocument;
