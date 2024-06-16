@@ -13,3 +13,16 @@ export interface IChannelDocument extends Document {
   channelCurrency: TChannelCurrency;
   status: ChannelStatus;
 }
+
+export interface IChannelMock {
+  _id?: string;
+  authorId?: string;
+  channelName?: string;
+  channelUsername?: string;
+  channelDescription?: string;
+  channelLogo?: string;
+  channelBanner?: string;
+  channelPrice?: number;
+  channelCurrency?: TChannelCurrency;
+  status?: ChannelStatus;
+}

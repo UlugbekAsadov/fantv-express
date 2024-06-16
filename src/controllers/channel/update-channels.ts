@@ -22,23 +22,20 @@ export class Update {
 
     if (!channel) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
 
+    const isChannelDeleted = channel.status === ChannelStatus.Deleted;
+
+    if (isChannelDeleted) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
+
     const channelOwnerId = channel.authorId.toString();
 
     const isChannelOwner = channelOwnerId === userId;
 
     if (!isChannelOwner) throw new BadRequestError(ErrorMessages.NOT_ALLOWED);
 
-    const isChannelActive = channel.status === ChannelStatus.Active;
-
-    if (!isChannelActive && !isChannelOwner) throw new BadRequestError(ErrorMessages.CHANNEL_NOT_ACTIVE);
-
     const newUsernameChannel = await channelService.getChannelByUsername(channelUsername);
 
     if (newUsernameChannel && newUsernameChannel._id?.toString() !== channelId)
       throw new BadRequestError(ErrorMessages.USERNAME_ALREADY_EXISTS);
-
-    const isChannelDeleted = channel.status === ChannelStatus.Deleted;
-    if (isChannelDeleted) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
 
     const channelBody: IChannelDocument = {
       channelName: channelName || channel.channelName,
