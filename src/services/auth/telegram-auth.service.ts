@@ -1,5 +1,5 @@
-import { TelegramAuthModel } from '../models/telegram-auth.model';
-import { ITelegramAuthDocument } from '../utils/interfaces/telegram-auth.interface';
+import { TelegramAuthModel } from "../../models/telegram-auth.model";
+import { ITelegramAuthDocument } from "../../utils/interfaces/telegram-auth.interface";
 
 class TelegramAuthService {
   public async getTelegramAuthByDeviceId(deviceId: string): Promise<ITelegramAuthDocument> {

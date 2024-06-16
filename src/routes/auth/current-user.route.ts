@@ -1,18 +1,18 @@
 import { Router } from 'express';
-import { AuthMiddlewares } from '../../middlewares/protected-route.middleware';
 import { CurrentUser } from '../../controllers/auth/current-user';
+import { ProtectedMiddlewares } from '../../middlewares/protected.middleware';
 
 class UserRoutes {
   private router: Router;
-  private authMiddlewares: AuthMiddlewares;
+  private middlewares: ProtectedMiddlewares;
 
   constructor() {
     this.router = Router();
-    this.authMiddlewares = new AuthMiddlewares();
+    this.middlewares = new ProtectedMiddlewares();
   }
 
   public routes() {
-    this.router.get('/me', this.authMiddlewares.verifyUser, CurrentUser.prototype.read);
+    this.router.get('/me', this.middlewares.verifyAuth, CurrentUser.prototype.read);
 
     return this.router;
   }

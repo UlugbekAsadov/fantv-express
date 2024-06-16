@@ -29,4 +29,3 @@ export interface IAuthMock {
   confirmPassword?: string;
   authType?: AuthTypes;
 }
-

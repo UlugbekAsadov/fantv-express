@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Request } from '../../../utils/interfaces/express.interface';
 import { Login } from '../login';
-import { telegramAuthService } from '../../../services/telegram-auth.service';
+import { telegramAuthService } from '../../../services/auth/telegram-auth.service';
 import { ErrorMessages } from '../../../utils/enums/error-response.enum';
 import { BadRequestError } from '../../../utils/helper/error-handler';
 import { joiValidation } from '../../../utils/decorators/joi-decorator';

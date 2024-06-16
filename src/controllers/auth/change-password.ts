@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { Request } from '../../utils/interfaces/express.interface';
-import { authService } from '../../services/auth.service';
+import { authService } from '../../services/auth/auth.service';
 import HTTP_STATUS from 'http-status-codes';
 import { hash } from 'bcrypt';
 import { SuccessMessages } from '../../utils/enums/success-response.enum';

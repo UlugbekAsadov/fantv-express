@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { IAuthDocument, IAuthMock } from '../interfaces/auth.interface';
 import { IUserDocument } from '../interfaces/user.interface';
 import { AuthType } from '../enums/auth.enum';
+import { UserRoles } from '../enums/user.enum';
 
 export const mockAuthRequest = (body: IAuthMock, userId?: string, authId?: string) => {
   return {
@@ -50,6 +51,7 @@ export const mergedAuthAndUserMock = {
     linkedin: '',
     telegram: '',
   },
+  roles: [UserRoles.USER],
 } as unknown as IUserDocument;
 
 export const mockRegistrationBody: IAuthMock = {
