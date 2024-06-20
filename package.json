@@ -4,7 +4,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "start": "nodemon node dist/index.js | bunyan",
+    "start": "nodemon node index.js | bunyan",
     "build": "tsc",
     "lint": "eslint 'src/**/*.ts'",
     "format": "prettier --write 'src/**/*.ts'",
