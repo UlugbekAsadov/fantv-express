@@ -6,14 +6,14 @@ import { ObjectId } from 'mongodb';
 import { IUserDocument } from '../../utils/interfaces/user.interface';
 import { UserModel } from '../../models/user.model';
 import { AuthModel } from '../../models/auth.model';
-import { authService } from '../../services/auth.service';
+import { authService } from '../../services/auth/auth.service';
 import { generateJWTToken } from '../../utils/utils';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
 import { registerSchema } from '../../schemas/auth/register.schema';
 import { AuthType } from '../../utils/enums/auth.enum';
 import { Response } from 'express';
 import { Request } from '../../utils/interfaces/express.interface';
-import { telegramAuthService } from '../../services/telegram-auth.service';
+import { telegramAuthService } from '../../services/auth/telegram-auth.service';
 
 export class Register {
   @joiValidation(registerSchema)

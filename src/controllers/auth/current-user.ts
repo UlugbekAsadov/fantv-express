@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { Request } from '../../utils/interfaces/express.interface';
-import { userService } from '../../services/user.service';
+import { userService } from '../../services/auth/user.service';
 
 export class CurrentUser {
   public async read(req: Request, res: Response, next: NextFunction) {

@@ -20,6 +20,7 @@ export const UserSchema: Schema = new Schema(
       twitter: { type: String, default: '' },
       youtube: { type: String, default: '' },
     },
+    roles: { type: Array, default: ['USER'] },
   },
   {
     timestamps: true,

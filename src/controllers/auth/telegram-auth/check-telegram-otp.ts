@@ -1,10 +1,10 @@
 import { Response } from 'express';
 import { Request } from '../../../utils/interfaces/express.interface';
-import { telegramAuthService } from '../../../services/telegram-auth.service';
+import { telegramAuthService } from '../../../services/auth/telegram-auth.service';
 import { BadRequestError, NotFoundError } from '../../../utils/helper/error-handler';
 import { ErrorMessages } from '../../../utils/enums/error-response.enum';
 import { generateJWTToken } from '../../../utils/utils';
-import { authService } from '../../../services/auth.service';
+import { authService } from '../../../services/auth/auth.service';
 import HTTP_STATUS from 'http-status-codes';
 import { SuccessMessages } from '../../../utils/enums/success-response.enum';
 import { joiValidation } from '../../../utils/decorators/joi-decorator';

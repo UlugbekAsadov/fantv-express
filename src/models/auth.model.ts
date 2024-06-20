@@ -1,7 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 import bcrypt from 'bcrypt';
 import { IAuthDocument } from '../utils/interfaces/auth.interface';
-import { AuthTypes } from '../utils/types/auth.type';
 
 const SALT_ROUND = 10;
 

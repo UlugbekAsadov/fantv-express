@@ -4,7 +4,7 @@ import { mockAuthRequest, mockAuthResponse, mockRegistrationBody } from '../../u
 import { clearDatabase, closeDatabase, connect } from '../setup';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import HTTP_STATUS from 'http-status-codes';
-import { telegramAuthService } from '../../services/telegram-auth.service';
+import { telegramAuthService } from '../../services/auth/telegram-auth.service';
 
 describe('Register', () => {
   beforeAll(async () => {

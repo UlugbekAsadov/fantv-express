@@ -4,9 +4,9 @@ import { CustomError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import { clearDatabase, closeDatabase, connect } from '../setup';
 import HTTP_STATUS from 'http-status-codes';
-import { authService } from '../../services/auth.service';
+import { authService } from '../../services/auth/auth.service';
 import { Request } from '../../utils/interfaces/express.interface';
-import { userService } from '../../services/user.service';
+import { userService } from '../../services/auth/user.service';
 
 const PHONE_NUMBER = '+998919537097';
 const PASSWORD = 'asdqwe123';

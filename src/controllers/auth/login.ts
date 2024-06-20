@@ -1,15 +1,15 @@
 import { Response } from 'express';
-import { userService } from '../../services/user.service';
+import { userService } from '../../services/auth/user.service';
 import { BadRequestError, NotFoundError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
-import { authService } from '../../services/auth.service';
+import { authService } from '../../services/auth/auth.service';
 import { generateJWTToken } from '../../utils/utils';
 import HTTPS_STATUS from 'http-status-codes';
 import { Request } from '../../utils/interfaces/express.interface';
 import { loginSchema } from '../../schemas/auth/login.schema';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
 import { AuthType } from '../../utils/enums/auth.enum';
-import { telegramAuthService } from '../../services/telegram-auth.service';
+import { telegramAuthService } from '../../services/auth/telegram-auth.service';
 
 export class Login {
   @joiValidation(loginSchema)

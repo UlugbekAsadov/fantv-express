@@ -1,5 +1,4 @@
 import Joi, { ObjectSchema } from 'joi';
-import { AuthType } from '../../utils/enums/auth.enum';
 import { AuthTypes } from '../../utils/types/auth.type';
 
 const registerSchema: ObjectSchema = Joi.object().keys({

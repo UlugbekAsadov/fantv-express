@@ -1,5 +1,6 @@
 import { Document } from 'mongoose';
 import { ObjectId } from 'mongodb';
+import { UserRoles } from '../enums/user.enum';
 
 export interface IUserDocument extends Document {
   _id: string | ObjectId;
@@ -20,5 +21,6 @@ export interface IUserDocument extends Document {
     linkedin?: string;
     telegram?: string;
   };
+  roles: UserRoles[];
   comparePassword(password: string): Promise<boolean>;
 }

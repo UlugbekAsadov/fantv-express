@@ -1,5 +1,5 @@
-import { AuthModel } from '../models/auth.model';
-import { IAuthDocument } from '../utils/interfaces/auth.interface';
+import { AuthModel } from "../../models/auth.model";
+import { IAuthDocument } from "../../utils/interfaces/auth.interface";
 
 export class AuthService {
   public async getAuthByPhoneNumber(phoneNumber: string): Promise<IAuthDocument> {
