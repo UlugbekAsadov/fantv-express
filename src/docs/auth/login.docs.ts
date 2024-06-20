@@ -7,7 +7,7 @@
 
 /**
  * @swagger
- * /login:
+ * /auth/login:
  *   post:
  *     summary: User login
  *     tags: [Auth]
@@ -56,7 +56,7 @@
  *                              linkedin: string
  *                              telegram: string
  *       404:
- *         description: USER_NOT_FOUND
+ *         description: AUTH_NOT_FOUND
  *
  *       400:
  *          description: INVALID_PASSWORD
