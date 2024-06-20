@@ -7,7 +7,7 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "outDir": "./src/dist",
+    "outDir": "./dist",
     "typeRoots": ["./node_modules/@types", "./types", "index.d.ts"]
   },
   "include": ["src/**/*.ts", "index.d.ts", "src/scripts/user.script.ts"],
