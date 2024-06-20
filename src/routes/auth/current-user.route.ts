@@ -3,7 +3,7 @@ import { CurrentUser } from '../../controllers/auth/current-user';
 import { ProtectedMiddlewares } from '../../middlewares/protected.middleware';
 
 class UserRoutes {
-  private router: Router;
+  private readonly router: Router;
   private middlewares: ProtectedMiddlewares;
 
   constructor() {

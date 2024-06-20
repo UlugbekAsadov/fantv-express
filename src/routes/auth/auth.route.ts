@@ -9,7 +9,7 @@ import { asyncWrapper } from '../../utils/helper/async-wrapper';
 import { ProtectedMiddlewares } from '../../middlewares/protected.middleware';
 
 class AuthRoutes {
-  private router: Router;
+  private readonly router: Router;
   private middlewares: ProtectedMiddlewares;
 
   constructor() {

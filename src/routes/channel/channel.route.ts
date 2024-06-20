@@ -7,7 +7,7 @@ import { Update } from '../../controllers/channel/update-channels';
 import { Delete } from '../../controllers/channel/delete-channel';
 
 class ChannelRoutes {
-  private router: Router;
+  private readonly router: Router;
   private middlewares: ProtectedMiddlewares;
 
   constructor() {

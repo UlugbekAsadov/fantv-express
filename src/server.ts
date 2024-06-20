@@ -2,7 +2,7 @@ import { Application, NextFunction, Request, Response, json, urlencoded } from '
 import { config } from './configs';
 import Logger from 'bunyan';
 import cors from 'cors';
-import helment from 'helmet';
+import helmet from 'helmet';
 import applicationRoutes from './routes';
 import { IErrorResponse } from './utils/interfaces/error.interface';
 import { CustomError } from './utils/helper/error-handler';
@@ -11,12 +11,11 @@ import HTTPS_STATUS from 'http-status-codes';
 const log: Logger = config.createLogger('server');
 
 export class FanTvServer {
-  private app: Application;
+  private readonly app: Application;
 
   constructor(app: Application) {
     this.app = app;
   }
-
   public start() {
     this.securityMiddlewares(this.app);
     this.standardMiddleware(this.app);
@@ -26,7 +25,7 @@ export class FanTvServer {
   }
 
   private securityMiddlewares(app: Application): void {
-    app.use(helment());
+    app.use(helmet());
     app.use(cors());
   }
 
