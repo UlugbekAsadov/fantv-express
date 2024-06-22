@@ -40,7 +40,7 @@ export class Read {
     const paginator = new Paginator<IChannelDocument>(
       ChannelModel,
       { page, limit },
-      { $or: [{ channelName: searchRegex }, { channelUsername: searchRegex }] },
+      { status: ChannelStatus.Active, $or: [{ channelName: searchRegex }, { channelUsername: searchRegex }] },
       {},
       { [sortingField]: parseInt(sortingOrder) },
     );
