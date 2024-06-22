@@ -12,6 +12,7 @@ export interface IChannelDocument extends Document {
   channelPrice: number;
   channelCurrency: TChannelCurrency;
   status: ChannelStatus;
+  followers: number;
 }
 
 export interface IChannelMock {

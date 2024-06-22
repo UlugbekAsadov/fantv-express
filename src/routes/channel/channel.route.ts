@@ -25,7 +25,7 @@ class ChannelRoutes {
 
     this.router.patch('/channel/:id', this.middlewares.verifyAuth, asyncWrapper(Update.prototype.channel));
     this.router.get('/channel/:id', this.middlewares.verifyAuth, asyncWrapper(Read.prototype.channelById));
-    this.router.get('/channels', this.middlewares.verifyAuth, asyncWrapper(Read.prototype.channels));
+    this.router.get('/channels', asyncWrapper(Read.prototype.channels));
     this.router.delete(
       '/channel/:id',
       this.middlewares.verifyAuth,
