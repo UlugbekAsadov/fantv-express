@@ -1,4 +1,6 @@
-import { Document, Model } from 'mongoose';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Model } from 'mongoose';
 
 interface PaginateOptions {
   page: number;
@@ -15,7 +17,7 @@ interface PaginatedResult<T> {
   hasPrevPage: boolean;
 }
 
-class Paginator<T extends Document> {
+class Paginator<T> {
   private model: Model<T>;
   private page: number;
   private limit: number;

@@ -7,6 +7,7 @@ import HTTP_STATUS from 'http-status-codes';
 import { ChannelStatus } from '../../utils/enums/channel.enum';
 import Paginator from '../../utils/helper/paginate';
 import { ChannelModel } from '../../models/channel.model';
+import { IChannelDocument } from '../../utils/interfaces/channel.interface';
 
 export class Read {
   public async channelById(req: Request, res: Response) {
@@ -36,7 +37,7 @@ export class Read {
     const searchRegex = new RegExp(searchText || '', 'i');
     const page = parseInt(req.query.page as string, 10) || 1;
     const limit = parseInt(req.query.limit as string, 10) || 10;
-    const paginator = new Paginator(
+    const paginator = new Paginator<IChannelDocument>(
       ChannelModel,
       { page, limit },
       { $or: [{ channelName: searchRegex }, { channelUsername: searchRegex }] },
