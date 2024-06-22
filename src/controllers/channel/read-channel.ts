@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Request } from '../../utils/interfaces/express.interface';
 import { channelService } from '../../services/channel/channel.service';
-import { BadRequestError, NotFoundError } from '../../utils/helper/error-handler';
+import { NotFoundError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import HTTP_STATUS from 'http-status-codes';
 import { ChannelStatus } from '../../utils/enums/channel.enum';
