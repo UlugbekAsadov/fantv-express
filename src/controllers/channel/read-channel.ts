@@ -5,6 +5,8 @@ import { NotFoundError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import HTTP_STATUS from 'http-status-codes';
 import { ChannelStatus } from '../../utils/enums/channel.enum';
+import Paginator from '../../utils/helper/paginate';
+import { ChannelModel } from '../../models/channel.model';
 
 export class Read {
   public async channelById(req: Request, res: Response) {
@@ -27,19 +29,22 @@ export class Read {
   }
 
   public async channels(req: Request, res: Response) {
-    const channels = await channelService.getActiveChannels();
-    res.status(HTTP_STATUS.OK).json(channels);
+    const searchText = req.query.search as string;
+    const sortingField = (req.query.sortBy || 'followers') as string;
+    const sortingOrder = (req.query.orderBy || '1') as string;
+
+    const searchRegex = new RegExp(searchText || '', 'i');
+    const page = parseInt(req.query.page as string, 10) || 1;
+    const limit = parseInt(req.query.limit as string, 10) || 10;
+    const paginator = new Paginator(
+      ChannelModel,
+      { page, limit },
+      { $or: [{ channelName: searchRegex }, { channelUsername: searchRegex }] },
+      {},
+      { [sortingField]: parseInt(sortingOrder) },
+    );
+
+    const paginatedChannels = await paginator.paginate();
+    res.status(HTTP_STATUS.OK).json(paginatedChannels);
   }
-
-  // public async myChannels(req: Request, res: Response) {
-  //   const userId = req.userId as string;
-
-  //   const page = parseInt(req.query.page as string, 10) || 1;
-  //   const limit = parseInt(req.query.limit as string, 10) || 10;
-
-  //   const paginator = new Paginator(ChannelModel, { page, limit }, { userId });
-  //   const paginatedUsers = await paginator.paginate();
-
-  //   return res.status(HTTP_STATUS.OK).json(paginatedUsers);
-  // }
 }

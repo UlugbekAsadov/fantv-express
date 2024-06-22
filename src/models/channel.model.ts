@@ -14,6 +14,7 @@ const channelService: Schema = new Schema(
     authorId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     status: { type: String, default: ChannelStatus.Inactive },
     followers: { type: Number, default: 0 },
+    lastVideos: { type: Array, default: [] },
   },
   { timestamps: true },
 );

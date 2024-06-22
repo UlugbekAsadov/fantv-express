@@ -10,6 +10,6 @@
     "outDir": "./dist",
     "typeRoots": ["./node_modules/@types", "./types", "index.d.ts"]
   },
-  "include": ["src/**/*.ts", "index.d.ts", "src/scripts/user.script.ts"],
+  "include": ["src/**/*.ts", "index.d.ts", "src/scripts/user.script.ts", "src/scripts/channels.script.js"],
   "exclude": ["node_modules"]
 }

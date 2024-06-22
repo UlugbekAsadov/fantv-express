@@ -13,6 +13,7 @@ export interface IChannelDocument extends Document {
   channelCurrency: TChannelCurrency;
   status: ChannelStatus;
   followers: number;
+  lastVideos: [];
 }
 
 export interface IChannelMock {
