@@ -64,31 +64,3 @@ class Application {
 
 const app: Application = new Application();
 app.initialize();
-/**
- * @swagger
- * tags:
- *   name: Users
- *   description: User management
- */
-
-/**
- * @swagger
- * /users:
- *   get:
- *     summary: Retrieves a list of users
- *     tags: [Users]
- *     responses:
- *       200:
- *         description: A list of users
- *         content:
- *           application/json:
- *             schema:
- *               type: array
- *               items:
- *                 type: object
- *                 properties:
- *                   id:
- *                     type: integer
- *                   name:
- *                     type: string
- */

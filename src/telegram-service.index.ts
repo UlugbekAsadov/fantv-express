@@ -2,9 +2,9 @@ import TelegramBot from 'node-telegram-bot-api';
 import dotenv from 'dotenv';
 import { generateOTP } from './utils/helper/generate-otp';
 import { databaseConnection } from './configs/db.config';
-import { telegramAuthService } from './services/telegram-auth.service';
 import { TelegramAuthModel } from './models/telegram-auth.model';
 import { generateRandomUsername } from './utils/helper/unique-username-generator';
+import { telegramAuthService } from './services/auth/telegram-auth.service';
 
 dotenv.config();
 

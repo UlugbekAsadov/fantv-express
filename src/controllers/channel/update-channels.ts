@@ -19,12 +19,9 @@ export class Update {
     const userId = req.userId as string;
 
     const channel = await channelService.getChannelById(channelId);
+    const isChannelDeleted = channel?.status === ChannelStatus.Deleted;
 
-    if (!channel) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
-
-    const isChannelDeleted = channel.status === ChannelStatus.Deleted;
-
-    if (isChannelDeleted) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
+    if (!channel || isChannelDeleted) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
 
     const channelOwnerId = channel.authorId.toString();
 

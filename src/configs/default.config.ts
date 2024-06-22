@@ -3,7 +3,6 @@ class DefaultConfig {
   public readonly PORT = '9000';
   public readonly BASE_PATH = '/api/v1';
   public readonly JWT_SECRET = '1234';
-  public readonly BASE_ORIGIN = 'http://localhost';
 }
 
 export const defaultConfig: DefaultConfig = new DefaultConfig();
