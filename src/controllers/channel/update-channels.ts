@@ -9,6 +9,7 @@ import { SuccessMessages } from '../../utils/enums/success-response.enum';
 import { ChannelStatus } from '../../utils/enums/channel.enum';
 import { joiValidation } from '../../utils/decorators/joi-decorator';
 import { updateChannelSchema } from '../../schemas/channel/channel-update.schema';
+import { ObjectId } from 'mongodb';
 
 export class Update {
   @joiValidation(updateChannelSchema)
@@ -16,16 +17,14 @@ export class Update {
     const { channelName, channelUsername, channelDescription, channelLogo, channelBanner, channelPrice, channelCurrency, status } =
       req.body as IChannelDocument;
     const channelId = req.params.id;
-    const userId = req.userId as string;
+    const userId = req.userId as ObjectId;
 
     const channel = await channelService.getChannelById(channelId);
     const isChannelDeleted = channel?.status === ChannelStatus.Deleted;
 
     if (!channel || isChannelDeleted) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
 
-    const channelOwnerId = channel.authorId.toString();
-
-    const isChannelOwner = channelOwnerId === userId;
+    const isChannelOwner = channel.authorId.toString() === userId.toString();
 
     if (!isChannelOwner) throw new BadRequestError(ErrorMessages.NOT_ALLOWED);
 

@@ -12,7 +12,7 @@ export class CheckTelegramPassword {
   @joiValidation(checkTelegramPasswordSchema)
   public async read(req: Request, res: Response) {
     const { password } = req.body;
-    const telegramAuthId = req.userId as string;
+    const telegramAuthId = req.userId?.toString() as string;
 
     const existingTelegramAuth = await telegramAuthService.getTelegramAuthById(telegramAuthId);
 

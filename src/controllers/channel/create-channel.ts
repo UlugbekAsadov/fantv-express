@@ -31,7 +31,7 @@ export class Create {
       channelDescription,
       channelLogo,
       channelBanner,
-    } as IChannelDocument;
+    } as unknown as IChannelDocument;
 
     const channel = await channelService.createChannel(channelBody);
 

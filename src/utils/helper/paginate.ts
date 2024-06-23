@@ -1,11 +1,13 @@
-import { Document, Model } from 'mongoose';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { Model } from 'mongoose';
 
 interface PaginateOptions {
   page: number;
   limit: number;
 }
 
-interface PaginatedResult<T> {
+export interface IPaginatedResult<T> {
   data: T[];
   totalData: number;
   totalPages: number;
@@ -15,7 +17,7 @@ interface PaginatedResult<T> {
   hasPrevPage: boolean;
 }
 
-class Paginator<T extends Document> {
+class Paginator<T> {
   private model: Model<T>;
   private page: number;
   private limit: number;
@@ -46,7 +48,7 @@ class Paginator<T extends Document> {
     return this.model.countDocuments(this.query).exec();
   }
 
-  public async paginate(): Promise<PaginatedResult<T>> {
+  public async paginate(): Promise<IPaginatedResult<T>> {
     const offset = this.getOffset();
     const data = await this.model.find(this.query, this.projection).sort(this.sort).skip(offset).limit(this.limit).exec();
     const totalData = await this.getTotalDocs();

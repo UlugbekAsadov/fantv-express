@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { UserRoles } from '../enums/user.enum';
 
 export interface IUserDocument extends Document {
-  _id: string | ObjectId;
+  _id:  ObjectId;
   username: string;
   email?: string;
   phoneNumber: string;

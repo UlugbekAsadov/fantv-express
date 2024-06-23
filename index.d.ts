@@ -1,10 +1,10 @@
-import express from 'express';
+import { ObjectId } from 'mongodb';
 
 declare global {
   namespace Express {
     interface Request {
-      userId?: string;
-      authId?: string;
+      userId?: ObjectId;
+      authId?: ObjectId;
     }
   }
 }

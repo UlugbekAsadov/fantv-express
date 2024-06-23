@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { userService } from '../../services/auth/user.service';
+import { userService } from '../../services/user/user.service';
 import { BadRequestError, NotFoundError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import { authService } from '../../services/auth/auth.service';

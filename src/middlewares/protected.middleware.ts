@@ -2,9 +2,10 @@ import { NextFunction, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request } from '../utils/interfaces/express.interface';
 import { ErrorMessages } from '../utils/enums/error-response.enum';
-import { userService } from '../services/auth/user.service';
+import { userService } from '../services/user/user.service';
 import { UserRoles } from '../utils/enums/user.enum';
 import HTTP_STATUS from 'http-status-codes';
+import { ObjectId } from 'mongodb';
 
 export class ProtectedMiddlewares {
   public verifyAuth(req: Request, res: Response, next: NextFunction) {
@@ -12,7 +13,7 @@ export class ProtectedMiddlewares {
 
     if (!bearerToken) return res.status(HTTP_STATUS.UNAUTHORIZED).json({ error: ErrorMessages.TOKEN_NOT_FOUND });
 
-    const [_, token] = bearerToken.split(' ');
+    const [, token] = bearerToken.split(' ');
 
     try {
       const decoded: JwtPayload = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
@@ -24,8 +25,20 @@ export class ProtectedMiddlewares {
     }
   }
 
+  public checkAuth(req: Request, res: Response, next: NextFunction) {
+    const bearerToken = req.header('Authorization');
+
+    if (!bearerToken) return next();
+
+    const [, token] = bearerToken.split(' ');
+
+    const decoded: JwtPayload = jwt.verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+    req.userId = decoded.userId;
+    next();
+  }
+
   public async verifyAuthorRole(req: Request, res: Response, next: NextFunction) {
-    const { authId } = req;
+    const authId = req.authId as unknown as ObjectId;
 
     if (!authId) return res.status(HTTP_STATUS.UNAUTHORIZED).json({ error: ErrorMessages.ACCESS_DENIED });
 

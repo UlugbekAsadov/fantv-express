@@ -17,8 +17,10 @@ class ChannelService {
     const channel: IChannelDocument = (await ChannelModel.findById(channelId)) as IChannelDocument;
     return channel;
   };
-  public getActiveChannels = async (): Promise<IChannelDocument[]> => {
-    const channels: IChannelDocument[] = (await ChannelModel.find({ status: ChannelStatus.Active })) as IChannelDocument[];
+  public getSortedActiveChannels = async (): Promise<IChannelDocument[]> => {
+    const channels: IChannelDocument[] = (await ChannelModel.find({ status: ChannelStatus.Active }).sort({
+      followers: -1,
+    })) as IChannelDocument[];
     return channels;
   };
 

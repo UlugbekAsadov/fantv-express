@@ -1,9 +1,9 @@
 import { Request as ExpressRequest } from 'express';
+import { ObjectId } from 'mongodb';
 
 export interface Request extends ExpressRequest {
-  userId?: string;
-  phoneNumber?: string;
-  authId?: string;
+  userId?: ObjectId;
+  authId?: ObjectId;
 }
 
 export interface Error {

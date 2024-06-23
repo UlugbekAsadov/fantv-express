@@ -1,4 +1,6 @@
+import { ObjectId } from 'mongodb';
+
 export interface JwtPayload {
-  userId: string;
-  authId: string;
+  userId: ObjectId;
+  authId: ObjectId;
 }
