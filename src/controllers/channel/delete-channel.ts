@@ -7,17 +7,18 @@ import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import { IChannelDocument } from '../../utils/interfaces/channel.interface';
 import { SuccessMessages } from '../../utils/enums/success-response.enum';
 import HTTP_STATUS from 'http-status-codes';
+import { ObjectId } from 'mongodb';
 
 export class Delete {
   public async channel(req: Request, res: Response) {
     const { id } = req.params;
-    const userId = req.userId as string;
+    const userId = req.userId as ObjectId;
 
     const existingChannel = await channelService.getChannelById(id);
 
     if (!existingChannel) throw new NotFoundError(ErrorMessages.CHANNEL_NOT_FOUND);
 
-    if (existingChannel.authorId.toString() !== userId) throw new BadRequestError(ErrorMessages.ACCESS_DENIED);
+    if (existingChannel.authorId.toString() !== userId.toString()) throw new BadRequestError(ErrorMessages.ACCESS_DENIED);
 
     const channelBody: IChannelDocument = { ...existingChannel, status: ChannelStatus.Deleted } as IChannelDocument;
 

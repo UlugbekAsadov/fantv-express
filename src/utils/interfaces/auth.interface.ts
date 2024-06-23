@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { AuthTypes } from '../types/auth.type';
 
 export interface IAuthDocument extends Document {
-  _id: string | ObjectId;
+  _id: ObjectId;
   fullName: string;
   username: string;
   password: string;

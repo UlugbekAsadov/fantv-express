@@ -5,14 +5,17 @@ import { NotFoundError } from '../../utils/helper/error-handler';
 import { ErrorMessages } from '../../utils/enums/error-response.enum';
 import HTTP_STATUS from 'http-status-codes';
 import { ChannelStatus } from '../../utils/enums/channel.enum';
-import Paginator from '../../utils/helper/paginate';
+import Paginator, { IPaginatedResult } from '../../utils/helper/paginate';
 import { ChannelModel } from '../../models/channel.model';
 import { IChannelDocument } from '../../utils/interfaces/channel.interface';
+import { subscriptionService } from '../../services/subscription/subscription.service';
+import { ObjectId } from 'mongodb';
+import { ISubscriptionDocument } from '../../utils/interfaces/subscription.interface';
 
 export class Read {
   public async channelById(req: Request, res: Response) {
     const { id } = req.params as { id: string };
-    const userId = req.userId as string;
+    const userId = req.userId as ObjectId;
 
     const channel = await channelService.getChannelById(id);
 
@@ -20,7 +23,7 @@ export class Read {
 
     const channelOwnerId = channel.authorId.toString();
 
-    const isOwner = channelOwnerId === userId;
+    const isOwner = channelOwnerId === userId.toString();
 
     const isChannelActive = channel.status === ChannelStatus.Active;
 
@@ -30,6 +33,8 @@ export class Read {
   }
 
   public async channels(req: Request, res: Response) {
+    const userId = req.userId;
+
     const searchText = req.query.search as string;
     const sortingField = (req.query.sortBy || 'followers') as string;
     const sortingOrder = (req.query.orderBy || '1') as string;
@@ -45,7 +50,31 @@ export class Read {
       { [sortingField]: parseInt(sortingOrder) },
     );
 
-    const paginatedChannels = await paginator.paginate();
+    let paginatedChannels = await paginator.paginate();
+
+    let subscriptions: ISubscriptionDocument[] = [];
+
+    if (userId) {
+      subscriptions = await subscriptionService.getSubscriptionsByUserId(userId);
+    }
+
+    const channelsWithSubscription = paginatedChannels.data.map((channel) => {
+      const subscription = subscriptions.find((sub) => sub.channelId.toString() === channel._id.toString());
+
+      let isSubscribed = false;
+      if (subscription) {
+        const currentDate = new Date();
+        isSubscribed = currentDate <= subscription.endDate;
+      }
+
+      return {
+        ...channel.toObject(),
+        isSubscribed,
+      };
+    });
+
+    paginatedChannels = { ...paginatedChannels, data: channelsWithSubscription } as IPaginatedResult<IChannelDocument>;
+
     res.status(HTTP_STATUS.OK).json(paginatedChannels);
   }
 }

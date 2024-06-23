@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IUserDocument } from '../utils/interfaces/user.interface';
 
 export const UserSchema: Schema = new Schema(

@@ -12,7 +12,7 @@ export class SetTelegramPassword {
   @joiValidation(changePasswordSchema)
   public async update(req: Request, res: Response) {
     const { password } = req.body;
-    const telegramAuthId = req.userId as string;
+    const telegramAuthId = req.userId?.toString() as string;
 
     const telegramAuth = await telegramAuthService.getTelegramAuthById(telegramAuthId);
 

@@ -7,7 +7,7 @@ interface PaginateOptions {
   limit: number;
 }
 
-interface PaginatedResult<T> {
+export interface IPaginatedResult<T> {
   data: T[];
   totalData: number;
   totalPages: number;
@@ -48,7 +48,7 @@ class Paginator<T> {
     return this.model.countDocuments(this.query).exec();
   }
 
-  public async paginate(): Promise<PaginatedResult<T>> {
+  public async paginate(): Promise<IPaginatedResult<T>> {
     const offset = this.getOffset();
     const data = await this.model.find(this.query, this.projection).sort(this.sort).skip(offset).limit(this.limit).exec();
     const totalData = await this.getTotalDocs();
