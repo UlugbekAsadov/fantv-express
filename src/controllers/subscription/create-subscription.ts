@@ -24,7 +24,7 @@ export class Create {
 
     const existingSubscription = await subscriptionService.getSubscription(channelId, userId);
 
-    const hasExpiredSubscription = existingSubscription.endDate < new Date();
+    const hasExpiredSubscription = existingSubscription?.endDate < new Date();
 
     if (existingSubscription && !hasExpiredSubscription) throw new BadRequestError(ErrorMessages.ALREADY_SUBSCRIBED);
 
